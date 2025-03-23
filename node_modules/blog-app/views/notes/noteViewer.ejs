@@ -1,0 +1,27 @@
+<%- include("../partials/header.ejs") %>
+
+<% if (locals.darkmode) { %>
+    <div class="card text-white bg-dark" id="note-card">
+        <h5 class="card-header" id="note-name">
+            <%=name%>"
+        </h5> 
+        <div class="card-body">
+            <p class="card-header" id="note-view">
+                <%=content%>
+            </p>
+        </div>
+    </div>
+<% } else { %>
+    <div class="card text-white bg-secondary" id="note-card">
+        <h5 class="card-header" id="note-name">
+            <%=name%>"
+        </h5> 
+        <div class="card-body">
+            <p class="card-header" id="note-view">
+                <%=content%>
+            </p>
+        </div>
+    </div>
+<% } %>
+
+<%- include("../partials/footer.ejs") %>

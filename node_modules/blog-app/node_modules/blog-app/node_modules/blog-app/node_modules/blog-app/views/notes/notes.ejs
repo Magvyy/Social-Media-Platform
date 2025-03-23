@@ -1,0 +1,38 @@
+<%- include("../partials/header.ejs") %>
+
+<div id="notes">
+    <% if (locals.notes) { %>
+        <% notes.forEach(note => { %>
+            <% var noteName = note["name"]; %>
+            <% var content = note["content"]; %>
+            <% var noteId = note["noteId"]; %>
+            <a class="notes-link" href = "/note/view/<%=noteId%>">
+                <% if (locals.darkmode) { %>
+                    <div class="card text-white bg-secondary mb-3 cards" style="max-width: 18rem;">
+                <% } else { %>
+                    <div class="card text-white bg-dark mb-3 cards" style="max-width: 18rem;">
+                <% } %>
+                    <div class="card-header">
+                        <%=noteName%>
+                        <button type="button" class="btn btn-secondary btn-lg delete" disabled>X</button>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><%=content%></p>
+                    </div>
+                </div>
+            </a>
+        <% }); %>
+    <% } %>
+</div>
+
+<% if (locals.darkmode) { %>
+    <div id="note-creator">
+        <a href="/note" class="btn btn-secondary" role="button" aria-pressed="true">Create note</a>
+    </div>
+<% } else { %>
+    <div id="note-creator">
+        <a href="/note" class="btn btn-dark" role="button" aria-pressed="true">Create note</a>
+    </div>
+<% } %>
+
+<%- include("../partials/footer.ejs") %>
