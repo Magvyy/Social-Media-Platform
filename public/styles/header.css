@@ -1,0 +1,18 @@
+
+#navbarText {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#navbarText ul {
+    width: 100%;
+}
+
+#log {
+    margin-left: auto;
+}
+
+#moon {
+    width: 24px;
+    height: 24px;
+}
