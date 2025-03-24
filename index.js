@@ -16,11 +16,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(exchangeDarkmode);
 app.use(logger);
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
     var user = req.session.user;
-    res.render("home.ejs", {
-        user: user,
-        darkmode: req.session.darkmode
+    await querying.loadRandomPublicNotes()
+    .then(notes => {
+        res.render("home.ejs", {
+            user: user,
+            notes: notes,
+            darkmode: req.session.darkmode
+        });
+    }).catch(e => {
+        console.log(e);
     });
 });
 
@@ -103,6 +109,7 @@ app.get("/note/create", authenticate, (req, res) => {
         user: user,
         name: undefined,
         content: undefined,
+        noteId: undefined,
         writeable: 1,
         darkmode: req.session.darkmode
     });
@@ -111,6 +118,7 @@ app.get("/note/create", authenticate, (req, res) => {
 app.post("/note/edit/*", authenticate, async (req, res) => {
     var user = req.session.user;
     var noteId = req.params[0];
+    console.log(req.body);
     await querying.queryResult(
         `SELECT * FROM notes ` +
         `WHERE noteId = ${noteId};`
@@ -142,12 +150,14 @@ app.get("/note/view/*", authenticate, async (req, res) => {
         var viewable = false;
         notes.forEach(note => {
             if (note["noteId"] == noteId) {
+                console.log(note["public"]);
                 viewable = true;
                 res.render("notes/note.ejs", {
                     user: user,
                     name: note["name"],
                     content: note["content"],
                     writeable: note["writeable"],
+                    isPublic: note["public"],
                     noteId: noteId,
                     darkmode: req.session.darkmode
                 });

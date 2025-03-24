@@ -7,33 +7,86 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
-.notes-link {
-    min-width: 10vw;
-    max-width: 20vw;
-    min-height: 10vh;
-    max-height: 15vh;
+#notes .notes-link {
+    min-width: 250px;
+    max-width: 30vw;
+    min-height: 150px;
+    max-height: 20vh;
     text-decoration: none;
 }
 
-.cards {
+#notes .notes-link .card {
     width: 100%;
     height: 100%;
+    display: flex;
+    gap: 12px;
+    padding: 8px;
+    box-shadow: 2px 3px 2px 2px rgb(0, 0, 0);
 }
 
-.card-header {
-    height: 50px;
+#notes .notes-link .card div {
+    border-radius: 10px;
+}
+
+#header {
+    max-height: fit-content;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0px;
 }
 
-.delete {
-    width: 25px;
-    height: 25px;
+#header p {
+    width: 100%;
+    padding: 0px;
+    margin-right: 10px;
+    padding: 4px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    box-shadow: 0px 0px 2px 2px rgb(26, 85, 163) !important;
+    background-color: rgba(26, 85, 163, 0.16) !important;
+}
+
+#header button {
+    height: 100%;
+    aspect-ratio : 1 / 1;
     font-size: 10px;
-    padding: 0;
+    align-self: center;
+    outline: none;
+    border: none;
+    padding: 0px;
+    z-index: 1;
+    box-shadow: 0px 0px 2px 2px rgb(26, 85, 163) !important;
+    background-color: rgba(26, 85, 163, 0.16) !important;
+}
+
+#header button:hover {
+    background-color: red;
+}
+
+#header button svg {
+    width: 100%;
+    height: 100%;
+    fill: rgb(26, 85, 163);
+}
+
+#body {
+    padding: 0px;
+}
+
+#body p {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    box-shadow: 0px 0px 2px 2px rgb(26, 85, 163) !important;
+    background-color: rgba(26, 85, 163, 0.16) !important;
 }
 
 #note-creator {
@@ -42,4 +95,8 @@
     width: 100%;
     text-align: center;
     z-index: 1;
-}  
+}
+
+#note-creator a {
+    box-shadow: 2px 2px 2px 2px rgb(0, 0, 0);
+}

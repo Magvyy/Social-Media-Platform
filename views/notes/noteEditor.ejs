@@ -1,21 +1,13 @@
-<%- include("../partials/header.ejs") %>
-
-<% if (locals.darkmode) { %>
-    <div class="card text-white bg-dark" id="note-card">
-        <input class="card-header" id="note-name" name="name" value="<%=name%>">
-        <div class="card-body">
-            <textarea class="card-header" id="note-edit" name="content"><%=content%></textarea>
-            <button class="btn btn-dark" type="submit" id="card-save-button">Save</button>
-        </div>
+<div class="card text-white bg-dark" id="edit-note">
+    <div class="card-header text-white bg-dark">
+        <input class="card-header text-white bg-dark" form="edit-note-form" name="name" id="note-name" value="<%=name%>">
+        <input type="checkbox" class="btn-check" id="isPublic" autocomplete="on">
+        <label class="btn btn-outline-secondary" for="isPublic">Public</label>
     </div>
-<% } else { %>
-    <div class="card text-white bg-secondary" id="note-card">
-        <input class="card-header" id="note-name" name="name" value="<%=name%>">
-        <div class="card-body">
-            <textarea class="card-header" id="note-edit" name="content"><%=content%></textarea>
-            <button class="btn btn-secondary" type="submit" id="card-save-button">Save</button>
-        </div>
+    <div class="card-body">
+        <textarea class="card-text text-white bg-dark" form="edit-note-form" name="content"><%=content%></textarea>
     </div>
-<% } %>
+    <button class="btn btn-secondary" form="edit-note-form">Save</button>
+</div>
 
-<%- include("../partials/footer.ejs") %>
+<form style="display: none;" action="/note/edit/<%=noteId%>" method="post" id="edit-note-form"></form>
