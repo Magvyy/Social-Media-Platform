@@ -1,0 +1,31 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;" id="sidebar">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg> -->
+      <span class="fs-4">Messages</span>
+    </a>
+    <hr>
+    <div id="chats">
+      <% if (locals.chats) { %>
+        <% chats.forEach(chat => { %>
+          <div class="chat" id="chat-<%=chat["profile_name"]%>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+            <a class="chat-name" href="/profile/<%=chat["profile_name"]%>">
+                <%=chat["profile_name"]%>
+            </a>
+            <a class="chat-message" href="/chat/<%=chat["chat_id"]%>">
+                <h5 class="card-text text-white bg-dark">
+                  <% if (userName === chat["sender"]) { %>
+                    you: <%=chat["message"]%>
+                  <% } else { %>
+                    <%=chat["sender"]%>: <%=chat["message"]%>
+                  <% } %>
+                </h5>
+            </a>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+</div>

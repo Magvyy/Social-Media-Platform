@@ -1,0 +1,10 @@
+<%- include("../components/top.ejs") %>
+
+<% if (locals.writeable) { %>
+    <link href="/styles/notes/noteEditor.css" rel="stylesheet">
+<% } else { %>
+    <link href="/styles/notes/noteViewer.css" rel="stylesheet">
+<% } %>
+
+<%- include("../components/bottom.ejs") %>
+

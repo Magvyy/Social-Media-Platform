@@ -1,0 +1,18 @@
+
+<div class="card text-white bg-dark" id="note">
+    <div id="note-header">
+            <input class="card-header text-white bg-dark" form="edit-note-form" name="note_name" id="note_name" value="<%=noteName%>">
+        <% if (locals.public === 0) { %>
+            <input type="checkbox" class="btn-check" form="edit-note-form" name="public" id="public">
+        <% } else { %>
+            <input type="checkbox" class="btn-check" form="edit-note-form" name="public" id="public" checked>
+        <% } %>
+            <label class="btn btn-outline-secondary" for="public">Public</label>
+    </div>
+    <div class="card-body" id="note-content">
+        <textarea class="card-text text-white bg-dark" form="edit-note-form" name="note_content"><%=noteContent%></textarea>
+    </div>
+    <button class="btn btn-secondary" form="edit-note-form">Save</button>
+</div>
+
+<form style="display: none;" action="/note/edit/<%=noteId%>" method="post" id="edit-note-form"></form>
