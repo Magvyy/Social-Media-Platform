@@ -1,19 +1,17 @@
 export function logger(req, res, next) {
-    var user = req.session.user;
-    console.log(req.session.user);
-    console.log("darkmode is: " + req.session.darkmode);
-    if (user === undefined) {
-        user = "anonymous user";
+    var userName = req.session.userName;
+    if (userName === undefined) {
+        userName = "anonymous user";
     }
-    console.log(`${req.method} method to ${req.url} from ${user}`);
+    console.log(`${req.method} method to ${req.url} from ${userName}`);
     next();
 }
 
 export function exchangeDarkmode(req, res, next) {
-    if (!req.session.darkmode) {
+    if (req.session.darkmode === undefined) {
         req.session.darkmode = false;
     }
-    if (req.body["darkmode"]) {
+    if (req.body["darkmode"] !== undefined) {
         req.session.darkmode = req.body["darkmode"];
     }
     next();

@@ -1,9 +1,9 @@
-<%- include("../partials/header.ejs") %>
+<%- include("../headers/notes/note.ejs") %>
 
 <% if (locals.writeable) { %>
-  <%- include("noteEditor.ejs") %>
+  <%- include("./partials/noteEditor.ejs") %>
 <% } else { %>
-  <%- include("noteViewer.ejs") %>
+  <%- include("./partials/noteViewer.ejs") %>
 <% } %>
 
-<%- include("../partials/footer.ejs") %>
+<%- include("../footers/default.ejs") %>
