@@ -24,7 +24,6 @@ function register() {
 
 socket.addEventListener("message", data => {
     var message = data["data"];
-    console.log(message);
     if (message) {
         var warningBox = document.querySelector("#warning");
         warningBox.classList.remove("hidden");

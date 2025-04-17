@@ -7,7 +7,7 @@ const db = mySQL.createPool({
     database: "notes_app"
 }).promise();
 
-export async function queryResult(query, variables) {
+async function queryResult(query, variables) {
     var rows;
     try {
         for (let i = 0; i < variables.length; i++) {
@@ -60,8 +60,8 @@ export async function loadRandomPublicNotes(noteIds) {
     var notes;
     var noteCount = 2;
     await getPublicNotes(noteIds)
-    .then(rows => {
-        var len = rows.length;
+    .then(publicNotes => {
+        var len = publicNotes.length;
         if (len > 0) {
             notes = [];
         }
@@ -70,8 +70,8 @@ export async function loadRandomPublicNotes(noteIds) {
         }
         for (let i = 0; i < noteCount; i++) {
             var index = Math.floor(Math.random() * len);
-            notes.push(rows[index]);
-            rows.splice(index, 1);
+            notes.push(publicNotes[index]);
+            publicNotes.splice(index, 1);
             len--;
         }
     }).catch(e => {
@@ -101,7 +101,7 @@ export async function getPassword(name) {
 
 // Used to register
 export async function register(name, password) {
-    var rows = await getUser(name);
+    await getUser(name);
     if (rows.length === 1) {
         return false;
     }
@@ -164,6 +164,22 @@ export async function createNote(req) {
         "INSERT INTO access (user_name, note_id, readable, writeable) " +
         "VALUES (?, ?, 1, 1);",
         [req.session.userName, noteId]
+    );
+}
+
+export async function editNote(req) {
+    var noteName = req.body["note_name"];
+    var noteContent = req.body["note_content"];
+    var isPublic = 0;
+    if (req.body["public"] === "on") {
+        isPublic = 1;
+    }
+    var noteId = req.params[0];
+    await queryResult(
+        "UPDATE notes " +
+        "SET note_name = ?, note_content = ?, public = ? " +
+        "WHERE note_id = ?;",
+        [noteName, noteContent, isPublic, noteId]
     );
 }
 
@@ -289,22 +305,6 @@ export async function getProfilePage(profile, userName) {
     return rows;
 }
 
-export async function editNote(req) {
-    var noteName = req.body["note_name"];
-    var noteContent = req.body["note_content"];
-    var isPublic = 0;
-    if (req.body["public"] === "on") {
-        isPublic = 1;
-    }
-    var noteId = req.params[0];
-    await queryResult(
-        "UPDATE notes " +
-        "SET note_name = ?, note_content = ?, public = ? " +
-        "WHERE note_id = ?;",
-        [noteName, noteContent, isPublic, noteId]
-    );
-}
-
 async function getChatId(chatter_1, chatter_2) {
     var rows = await queryResult(
         "SELECT chat_id FROM chats " +
@@ -344,17 +344,6 @@ export async function saveMessage(sender, recipient, message) {
     })
 }
 
-
-export async function getChatlogs(sender, recipient) {
-    var chatId = getChatId(sender, recipient);
-    var rows = await queryResult(
-        "SELECT * FROM messages " +
-        "WHERE chat_id = ? " +
-        "ORDER BY sent DESC;",
-        [chatId]
-    );
-    return rows;
-}
 
 export async function getRecievedMessages(sender, recipient) {
     var rows = await queryResult(
@@ -412,4 +401,92 @@ export async function loadFrontPage(userName) {
     let p2 = await loadChats(userName);
     var [notes, chats] = await Promise.all([p1, p2]);
     return [notes, chats];
+}
+
+async function incrementNoteLikes(noteId, incr) {
+    await queryResult(
+        "UPDATE notes " +
+        "SET likes = likes " + incr + " 1 " +
+        "WHERE note_id = ?;",
+        [noteId]
+    );
+}
+
+async function incrementCommentLikes(commentId, incr) {
+    await queryResult(
+        "UPDATE notes " +
+        "SET likes = likes " + incr + " 1 " +
+        "WHERE comment_id = ?;",
+        [commentId]
+    );
+}
+
+async function hasLikedNote(userName, noteId) {
+    var rows = await queryResult(
+        "SELECT * FROM likes " +
+        "WHERE (user_name, note_id) = (?, ?);",
+        [userName, noteId]
+    )
+    return rows.length === 1;
+}
+
+async function hasLikedComment(userName, commentId) {
+    var rows = await queryResult(
+        "SELECT * FROM likes " +
+        "WHERE (user_name, comment_id) = (?, ?);",
+        [userName, commentId]
+    )
+    return rows.length === 1;
+}
+
+export async function likeNote(userName, noteId) {
+    await hasLikedNote(userName, noteId)
+    .then(hasLiked => {
+        if (hasLiked) {
+            incrementNoteLikes(noteId, "-");
+            queryResult(
+                "DELETE FROM likes " +
+                "WHERE (user_name, note_id) = (?, ?);",
+                [userName, noteId]
+            );
+        }
+        else {
+            incrementNoteLikes(noteId, "+");
+            queryResult(
+                "INSERT INTO likes (user_name, note_id, comment_id) " +
+                "VALUES (?, ?, ?);",
+                [userName, noteId, null]
+            );
+        }
+    })
+}
+
+export async function likeComment(userName, commentId) {
+    await hasLikedComment(userName, commentId)
+    .then(hasLiked => {
+        if (hasLiked) {
+            incrementCommentLikes(noteId, "-");
+            queryResult(
+                "DELETE FROM likes " +
+                "WHERE (user_name, comment_id) = (?, ?);",
+                [userName, commentId]
+            );
+        }
+        else {
+            incrementCommentLikes(noteId, "+");
+            queryResult(
+                "INSERT INTO likes (user_name, note_id, comment_id) " +
+                "VALUES (?, ?, ?);",
+                [userName, null, commentId]
+            );
+        }
+    })
+}
+
+export async function saveComment(userName, noteId, content) {
+    await queryResult(
+        "INSERT INTO comments (user_name, note_id, content) " +
+        "VALUES (?, ?, ?);",
+        [userName, noteId, content]
+    );
 }

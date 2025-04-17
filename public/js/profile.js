@@ -1,4 +1,3 @@
-
 document.addEventListener("keydown", function(e) {
     var key = e.key.toLowerCase();
     if (key === "enter") {

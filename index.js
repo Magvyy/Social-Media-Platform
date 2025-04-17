@@ -19,7 +19,6 @@ const port = 8000;
 
 var sess = session({secret: 'keyboard cat'});
 
-// app.use(express.static("C:/Programming/Web Development/Section 26 - Capstone Project - Create a Blog web application/public"));
 app.use(express.static(__dirname + "/public"));
 app.use(sess);
 app.use(bodyParser.urlencoded({extended: true}));
@@ -254,6 +253,30 @@ app.get("/message?*", authenticate, async (req, res) => {
     }).catch(e => {
         console.log(e);
     });
+});
+
+app.post("/comment?*", authenticate, async (req, res) => {
+    var userName = req.session.userName;
+    var noteId = req.query["note_id"];
+    var content = req.query["content"];
+    await querying.saveComment(userName, noteId, content)
+    .then(success => {
+        console.log("comment saved.");
+    }).catch(e => {
+        console.log(e);
+    });
+});
+
+app.post("/like?*", authenticate, async (req, res) => {
+    var userName = req.session.userName;
+    var noteId = req.query["note_id"];
+    var commentId = req.query["comment_id"];
+    if (noteId !== "null") {
+        await querying.likeNote(userName, noteId);
+    }
+    else {
+        await querying.likeComment(userName, commentId);
+    }
 });
 
 router.ws("/socket", async (req, res) => {

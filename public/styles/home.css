@@ -13,6 +13,11 @@ html {
     gap: 10px;
 }
 
+#notes * {
+    animation-name: fadeIn;
+    animation-duration: 2s;
+}
+
 #note {
     overflow: hidden;
     width: 30vw;
@@ -106,4 +111,19 @@ html {
     justify-content: space-around;
     border: none;
     padding: 5px;
+}
+
+#interact button {
+    all: unset;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

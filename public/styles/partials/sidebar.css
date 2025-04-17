@@ -7,15 +7,19 @@
     margin: 0px;
 }
 
-#siderbar a {
+/* #sidebar a {
     margin: 0px;
     width: 25vw;
-}
+} */
 
 #sidebar a span {
-    /* min-width: min-content; */
     width: 25vw;
     text-align: center;
+}
+
+#chats * {
+    animation-name: rollIn;
+    animation-duration: 0.5s;
 }
 
 .chat {
@@ -30,8 +34,14 @@
     text-decoration: none;
 }
 
-.chat svg {
-    grid-row: span 2;
+.profile {
+    grid-area: 1 / 1 / 3 / 2;
+    width: 30px;
+    height: 30px;
+    color: white;
+}
+
+.profile svg {
     width: 30px;
     height: 30px;
     margin: 10px;
@@ -39,13 +49,24 @@
 
 .chat-name {
     grid-area: 1 / 2 / 2 / 3;
+    max-width: fit-content;
 }
 
 .chat-message {
     grid-area: 2 / 2 / 3 / 3;
+    max-width: fit-content;
 }
 
 .chat-message h5 {
     font-size: 10px;
 }
 
+@keyframes rollIn {
+    0% {
+        height: 0px;
+    }
+
+    100% {
+        height: min-conent;
+    }
+}
