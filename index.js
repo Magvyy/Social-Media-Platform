@@ -74,9 +74,10 @@ app.get("/login", (req, res) => {
     });
 });
 
-app.post("/login?*", async (req, res) => {
-    var userName = req.query["user_name"];
-    var password = req.query["password"];
+app.post("/login", async (req, res) => {
+    var formData = req.body;
+    var userName = formData["user_name"];
+    var password = formData["password"];
     await querying.getPassword(userName)
     .then(result => {
         if (result.length === 1) {
@@ -90,12 +91,20 @@ app.post("/login?*", async (req, res) => {
                     res.redirect("/");
                 } 
                 else {
-                    sockets[req.session.socketId].send("Incorrect password");
+                    res.render("login.ejs", {
+                        userName: req.session.userName,
+                        darkmode: req.session.darkmode,
+                        error: "Incorrect password"
+                    });
                 }
             });
         }
         else {
-            sockets[req.session.socketId].send("Incorrect username");
+            res.render("login.ejs", {
+                userName: req.session.userName,
+                darkmode: req.session.darkmode,
+                error: "Incorrect Username"
+            });
         }
     }).catch(e => {
         console.log(e);
@@ -110,16 +119,24 @@ app.get("/register", (req, res) => {
     });
 });
 
-app.post("/register?*", async (req, res) => {
-    var userName = req.query["user_name"];
-    var password = await bcrypt.hash(req.query["password"], 10);
+app.post("/register", async (req, res) => {
+    var formData = req.body;
+    var userName = formData["user_name"];
+    var password = await bcrypt.hash(formData["password"], 10);
     await querying.register(userName, password)
     .then(passed => {
         if (passed) {
+            userSocket[userName] = req.session.socketId;
+            req.session.userName = userName;
+            req.session.loggedIn = true;
             res.redirect("/");
         }
         else {
-            sockets[req.session.socketId].send("Username taken");
+            res.render("register.ejs", {
+                userName: req.session.userName,
+                darkmode: req.session.darkmode,
+                error: "Username taken"
+            });
         }
     });
 });

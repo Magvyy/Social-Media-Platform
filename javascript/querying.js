@@ -96,12 +96,13 @@ export async function getPassword(name) {
         "WHERE user_name = ?;",
         [name]
     );
+    console.log(rows)
     return rows;
 }
 
 // Used to register
 export async function register(name, password) {
-    await getUser(name);
+    var rows = await getUser(name);
     if (rows.length === 1) {
         return false;
     }

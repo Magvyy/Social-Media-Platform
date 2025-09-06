@@ -1,6 +1,6 @@
 <%- include("./headers/register.ejs") %>
 
-<div class="container col-2" id="register-form">
+<form class="container col-2 login-register-form" id="register-form" method="POST" action="/register">
     <div class="form-group">
       <label for="user">Username</label>
       <input type="user" class="form-control" id="user_name" name="user_name" placeholder="Enter username">
@@ -10,13 +10,15 @@
       <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
     </div>
     <% if (locals.darkmode) { %>
-        <button onclick="register()" class="btn btn-secondary">Register</button>
+        <button type="submit" class="btn btn-secondary">Register</button>
     <% } else { %>
-        <button onclick="register()" class="btn btn-dark">Register</button>
+        <button type="submit" class="btn btn-dark">Register</button>
     <% } %>
-    <div class="hidden" id="warning">
-      <p class="alert alert-danger"></p>
-    </div>
-</div>
+    <% if (locals.error) { %>
+        <div class="warning">
+            <p class="alert alert-danger"><%= error %></p>
+        </div>
+    <% } %>
+</form>
 
 <%- include("./footers/loginOrRegister.ejs") %>
