@@ -96,7 +96,6 @@ export async function getPassword(name) {
         "WHERE user_name = ?;",
         [name]
     );
-    console.log(rows)
     return rows;
 }
 
